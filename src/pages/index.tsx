@@ -2,12 +2,14 @@ import { Button, Layout, Menu } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import { connect, useDispatch, useStore } from 'dva';
 import React, { useMemo, useState } from 'react';
+import { useModel } from 'umi';
 import { initialState, StateType } from '../models/book';
 const { Header, Content, Footer } = Layout;
 
 function IndexPage(props: { book: any }) {
   const dispatch = useDispatch();
   const store = useStore();
+  const { user, setUserData } = useModel('appstore');
 
   const [bookState, setBookState] = useState<StateType>(initialState);
 
@@ -23,6 +25,8 @@ function IndexPage(props: { book: any }) {
   }
 
   function handlerQuery(id: string) {
+    console.log('model', user);
+    setUserData('liang', '123');
     dispatch({
       type: 'book/query',
       payload: { id },
@@ -55,6 +59,11 @@ function IndexPage(props: { book: any }) {
           </div>
           <div>
             <Text>useState book: {bookState.info}</Text>
+          </div>
+          <div>
+            <Text>
+              bookModel account: {user.account}, password:{user.password}
+            </Text>
           </div>
         </Content>
       </Layout>
