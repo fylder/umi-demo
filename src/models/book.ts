@@ -14,7 +14,7 @@ export default {
   namespace: 'book',
   state: initialState,
   reducers: {
-    query: (state: any, { payload }) => {
+    query: (state: any, { payload }: any) => {
       console.log('state:', state);
       initialState.info = payload.id;
       let resp = { ...state, ...initialState };

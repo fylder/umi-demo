@@ -6,7 +6,8 @@ import { useModel } from 'umi';
 import { initialState, StateType } from '../models/book';
 const { Header, Content, Footer } = Layout;
 
-function IndexPage(props: { book: any }) {
+//声明props，用于可调用props.login
+function IndexPage(props: { book: any; login: any }) {
   const dispatch = useDispatch();
   const store = useStore();
   const { user, setUserData } = useModel('appstore');
@@ -15,10 +16,17 @@ function IndexPage(props: { book: any }) {
 
   // 监听Redux
   useMemo(() => {
-    console.log('props状态改变触发器');
+    console.log('props book状态');
     let storeState = store.getState();
     setBookState(storeState.book);
-  }, [props]);
+    console.log('props:', storeState.book);
+  }, [props.book]);
+
+  // 监听Redux
+  useMemo(() => {
+    console.log('props login状态');
+    console.log('login info:', props.login);
+  }, [props.login]);
 
   function updateBookState() {
     console.log('book:', props.book);
@@ -30,6 +38,17 @@ function IndexPage(props: { book: any }) {
     dispatch({
       type: 'book/query',
       payload: { id },
+    });
+  }
+
+  function handlerLogin() {
+    let data = {
+      username: 'fylder',
+      password: '1234567',
+    };
+    dispatch({
+      type: 'login/loginAhh',
+      payload: data,
     });
   }
 
@@ -54,6 +73,14 @@ function IndexPage(props: { book: any }) {
           >
             click
           </Button>
+          <Button
+            type="default"
+            onClick={() => {
+              handlerLogin();
+            }}
+          >
+            login
+          </Button>
           <div>
             <Text>book: {props.book.info}</Text>
           </div>
@@ -71,6 +98,7 @@ function IndexPage(props: { book: any }) {
   );
 }
 
-export default connect(({ book }: { book: StateType }) => ({ book }))(
-  IndexPage,
-);
+export default connect(({ book, login }: { book: StateType; login: any }) => ({
+  book,
+  login,
+}))(IndexPage);
